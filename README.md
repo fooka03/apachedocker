@@ -1,12 +1,16 @@
 # apachedocker
 A small example of apache running in a docker container using supervisord
-One endpoint is exposed `fibonacci` which takes a positive integer `number` as a query parameter and returns a list of 'n' fibonacci numbers.
+One endpoint is exposed `fibonacci` which takes a positive integer `number` as a query parameter and returns a list of 'n' fibonacci numbers.  The fibonacci endpoint is programmed in python and uses mod_wsgi in apache2.
 
 ### Starting
-After building the container with `docker build -t fooka03/apachedocker:testing https://github.com/fooka03/apachedocker.git`, the container can be started in detached mode via `docker run -d fooka03/apachedocker:testing`  This will start the container and execute the supervisor process, which in turn calls apache2ctl -DFOREGROUND.  This enables the container to run continuously without user intervention.
+After building the container with:
+    ```
+    docker build -t fooka03/apachedocker:testing https://github.com/fooka03/apachedocker.git
+    ```
+the container can be started in detached mode via: `docker run -d fooka03/apachedocker:testing`  This will start the container and execute the supervisor process, which in turn calls apache2ctl -DFOREGROUND.  This enables the container to run continuously without user intervention.
 
 ### Use
-Once the container has been started, the `fibonacci` endpoint will be available.  This can be invoked from the host simply through the following command: `curl <container_ip>/fibonacci?number=5`  The REST service will then return the first five fibonacci numbers in sequence (0 through 4) or `[0, 1, 1, 2, 3]`  '5' can be replaced with any positive integer to receive the appropriate range of fibonacci numbers in return.
+Once the container has been started, the `fibonacci` endpoint will be available.  First, to find the IP address of the container, invoke: `docker inspect <container id>`  Then, the endpoint can be invoked from the host simply through the following command: `curl <container ip>/fibonacci?number=5`  The REST service will then return the first five fibonacci numbers in sequence (0 through 4) or `[0, 1, 1, 2, 3]`  '5' can be replaced with any positive integer to receive the appropriate range of fibonacci numbers in return.
 
 ### States
  * A zero, or negative number will return a 400 BAD REQUEST response and tell the user they need to supply a positive integer.
